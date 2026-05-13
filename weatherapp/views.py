@@ -4,8 +4,8 @@ import datetime
 
 
 def home(request):
-  #  return HttpResponse('Hey this is my django server')
 
+    unsplash_access_key = 'tpzvIjb5VjAPUMzywh94f9m8yFZDRN6fOhbHrELNzRQ'
     if 'city' in request.POST:
       city = request.POST['city']
     else:
@@ -30,6 +30,12 @@ def home(request):
 
       description, icon, temp = "Not Found", "", "N/A"
 
+
+    city_background_url = f'https://api.unsplash.com/photos/random?query={city},cityscape&client_id={unsplash_access_key}'
+    city_background = requests.get(city_background_url).json()
+
+    city_image = city_background.get('urls', {}).get('regular', 'https://unsplash.com')
+
     day = datetime.date.today()
-    return render(request, 'home.html',{'description':description,'icon':icon,'temp':temp,'day':day})
+    return render(request, 'home.html',{'description':description,'icon':icon,'temp':temp,'day':day,'city_image':city_image})
 
